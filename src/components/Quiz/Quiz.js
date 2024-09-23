@@ -51,25 +51,55 @@ export default class Quiz extends React.Component {
         }
     }
 
+    clickHandler(isCorrect) {
+        console.log(isCorrect);
+
+        if (isCorrect) {
+            this.setState(prevState => {
+                return {
+                    score: prevState.score + 1
+                }
+            })
+        }
+
+        if (this.state.currentQuestion === 3) {
+            this.setState({ showScore: true })
+        } else {
+            this.setState(prevState => {
+                return {
+                    currentQuestion: prevState.currentQuestion + 1
+                }
+            })
+        }
+
+
+    }
+
     render() {
         return (
             <div className='app'>
-                {/* next div is for showing user score */}
-                    {/* <div className='score-section'>
-                        You scored 0 out of 4
-                    </div> */}
-                        <div className='question-section'>
-                            <div className='question-count'>
-                                <span>Question 1</span>/ 4
+                {this.state.showScore ?
+                    (<div className='score-section'>
+                        You scored {this.state.score} out of {this.state.questions.length}
+                    </div>) : (
+                        <div>
+                            <div className='question-section'>
+                                <div className='question-count'>
+                                    <span>Question {this.state.currentQuestion + 1}</span>/ {this.state.questions.length}
+                                </div>
+                                <div className='question-text'>{this.state.questions[this.state.currentQuestion].questionText}</div>
                             </div>
-                            <div className='question-text'>Where is Iran capital?</div>
+                            <div className='answer-section'>
+                                {this.state.questions[this.state.currentQuestion].answerOptions.map(answer => (
+                                    <button onClick={this.clickHandler.bind(this, answer.isCorrect)}>{answer.answerText}</button>
+                                ))}
+
+                            </div>
                         </div>
-                        <div className='answer-section'>
-                                <button>Tehran</button>
-                                <button>Tabriz</button>
-                                <button>Gorgan</button>
-                                <button>Shiraz</button>
-                        </div>
+                    )}
+
+
+
             </div>
         )
     }
